@@ -1,0 +1,67 @@
+{
+  "name": "rizkussef/laravel-crud-api",
+  "description": "A clean, scalable Api CRUD package for the Service-based architecture for Laravel with advanced filtering, eager-loading relationships, and automatic resource resolution",
+  "type": "library",
+  "license": "MIT",
+  "homepage": "https://github.com/rizkussef/laravel-crud-api",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "keywords": [
+    "laravel crud api",
+    "laravel crud operations",
+    "laravel crud package",
+    "laravel",
+    "crud",
+    "service-based-architecture",
+    "filtering",
+    "query-builder",
+    "api",
+    "rest",
+    "pagination",
+    "relationships",
+    "eager-loading",
+    "base-service",
+    "base-controller",
+    "api-resources",
+    "laravel-package",
+    "laravel crud generator",
+    "laravel api core crud",
+    "laravel base crud api"
+  ],
+  "autoload": {
+    "psr-4": {
+      "Rizkussef\\LaravelCrudApi\\": "src/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Rizk Ussef",
+      "email": "rizkussef@gmail.com",
+      "homepage": "https://github.com/rizkussef",
+      "role": "Developer"
+    }
+  ],
+  "minimum-stability": "stable",
+  "require": {
+    "php": "^8.1",
+    "illuminate/support": "^10.0|^11.0|^12.0",
+    "illuminate/http": "^10.0|^11.0|^12.0",
+    "illuminate/database": "^10.0|^11.0|^12.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^10.0",
+    "laravel/pint": "^1.0",
+    "mockery/mockery": "^1.5"
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Rizkussef\\LaravelCrudApi\\ApiCrudServiceProvider"
+      ]
+    }
+  },
+  "prefer-stable": true
+
+}
