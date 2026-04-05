@@ -1,0 +1,10 @@
+<?php
+
+namespace {{ rootNamespace }}Services;
+
+use Rizkussef\LaravelCrudApi\Services\ApiCrudService;
+
+class {{ class }}Service extends ApiCrudService
+{
+    // You can override default methods or define custom service logic here
+}
