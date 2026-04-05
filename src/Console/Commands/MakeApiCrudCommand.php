@@ -20,7 +20,7 @@ class MakeApiCrudCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Create all files needed for API CRUD (Model, Resource, Requests, Controller, Service)';
+    protected $description = 'Create all files needed for API CRUD (Model, Resource, Requests, Controller, Service, Migration)';
 
     /**
      * Execute the console command.
@@ -43,7 +43,7 @@ class MakeApiCrudCommand extends Command
 
         // 3. Form Requests
         $this->call('make:request', ['name' => "{$name}Request"]);
-        $this->call('make:request', ['name' => "{$name}UpdateRequest"]);
+        $this->call('make:request', ['name' => "Update{$name}Request"]);
         
         // 4. Controller
         $this->generateController($name);
@@ -58,7 +58,7 @@ class MakeApiCrudCommand extends Command
     protected function generateController($name)
     {
         $controllerNamespace = $this->laravel->getNamespace() . 'App/Http/Controllers';
-        $controllerPath = app_path("App/Http/Controllers/{$name}Controller.php");
+        $controllerPath = app_path("app/Http/Controllers/{$name}Controller.php");
 
         $stub = File::get(__DIR__ . '/../Stubs/controller.stub');
         $stub = str_replace(
@@ -67,7 +67,7 @@ class MakeApiCrudCommand extends Command
             $stub
         );
 
-        File::ensureDirectoryExists(app_path('App/Http/Controllers'));
+        File::ensureDirectoryExists(app_path('app/Http/Controllers'));
         
         if (!File::exists($controllerPath)) {
             File::put($controllerPath, $stub);
@@ -80,7 +80,7 @@ class MakeApiCrudCommand extends Command
     protected function generateService($name)
     {
         $serviceNamespace = $this->laravel->getNamespace() . 'App/Services';
-        $servicePath = app_path("App/Services/{$name}Service.php");
+        $servicePath = app_path("app/Services/{$name}Service.php");
 
         $stub = File::get(__DIR__ . '/../Stubs/service.stub');
         $stub = str_replace(
@@ -89,7 +89,7 @@ class MakeApiCrudCommand extends Command
             $stub
         );
 
-        File::ensureDirectoryExists(app_path('Services'));
+        File::ensureDirectoryExists(app_path('app/Services'));
         
         if (!File::exists($servicePath)) {
             File::put($servicePath, $stub);
