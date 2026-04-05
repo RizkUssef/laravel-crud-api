@@ -17,6 +17,8 @@ A clean, scalable **Api CRUD architecture for Laravel**, built around a reusable
 - ✅ Advanced Filtering (=, !=, >, <, >=, <=, LIKE, IN, BETWEEN, NULL checks, Date operations)
 - ✅ Eager Loading Relationships
 - ✅ API Response Formatting
+- ✅ Auto-Validation using Form Requests
+- ✅ Auto Creation of Model, Resource, Requests, Controller, Service, Migration using Command
 
 Designed to eliminate repetitive CRUD logic while keeping your application clean and maintainable. Pass filters and relationships directly from your frontend to dynamically build optimized queries with full control over data retrieval.
 
@@ -75,15 +77,56 @@ App
  ├── Http
  │     ├── Controllers
  │     │      └── UserController.php
+ │     ├── Requests
+ │     │      ├── UserRequest.php
+ │     │      └── UserUpdateRequest.php
  │     └── Resources
  │            └── UserResource.php
 ```
 
 ---
 
-# 🚀 Quick Start
+# ⚡ Artisan Generator Command
 
-## 1️⃣ Create a Service
+The absolute fastest way to get started is by using the built-in Artisan generator. This powerful command scaffolds a fully functional CRUD API endpoint in seconds!
+
+```bash
+php artisan api-crud:make {Model}
+```
+
+### 🎯 Example: Creating an Article API
+
+```bash
+php artisan api-crud:make Article
+```
+
+**What happens behind the scenes?** The command automatically generates all layers required for an API CRUD operation:
+
+| Layer | Generated File | Description |
+| :--- | :--- | :--- |
+| **Model** | `App\Models\Article.php` | The Eloquent model (along with its database migration). |
+| **Resource** | `App\Http\Resources\ArticleResource.php` | Automatically serializes and formats your JSON response. |
+| **Requests** | `App\Http\Requests\ArticleRequest.php`<br>`ArticleUpdateRequest.php` | Dedicated Form validation classes (Auto-validated by Controller). |
+| **Service** | `App\Services\ArticleService.php` | Core business logic layer (Extends `ApiCrudService`). |
+| **Controller**| `App\Http\Controllers\ArticleController.php` | Handles routing and formatting (Extends `ApiCrudController`). |
+
+### ⚙️ Available Options
+
+| Option | Description | Example |
+| :--- | :--- | :--- |
+| `--no-migration` | Tells the generator to skip database migration file creation. | `php artisan api-crud:make User --no-migration` |
+
+Once generated, just register your new endpoint in `routes/api.php` and you're fully operational!
+
+```php
+Route::apiResource('articles', ArticleController::class);
+```
+
+---
+
+# 🛠 Manual Setup (Step-by-Step)
+
+### 1️⃣ Create a Service
 
 ```php
 namespace App\Services;
@@ -96,14 +139,18 @@ class UserService extends ApiCrudService
 }
 ```
 
-### 🔎 Automatic Model & Resource Resolution
+### 🔎 Automatic Resolution (Models, Resources, and Form Requests)
+
+The architecture heavily relies on naming conventions to automatically resolve dependencies:
 
 ```
-UserService → App\Http\Resources\UserResource
 UserService → App\Models\User
+UserService → App\Http\Resources\UserResource
+UserController → App\Http\Requests\UserRequest (Used for store)
+UserController → App\Http\Requests\UserUpdateRequest (Used for update)
 ```
 
-No need to manually define the model or resource.
+No need to manually inject or define the Model, Resource, or Form Requests. `ApiCrudController` automatically validates inbound requests using the resolved Form Request before passing data to the Service.
 
 ---
 
@@ -129,7 +176,7 @@ Just Inject the specific service for this controller.
 
 # � Filters & Relationships
 
-The package includes powerful filtering and eager-loading capabilities. Pass filters and relationships from the frontend to dynamically build queries.
+The package includes powerful filtering and eager-loading capabilities. Pass filters and relationships from the frontend to dynamically build queries. They can be passed either as array parameters or as JSON-encoded strings.
 
 ## Available Filter Operators
 
@@ -181,6 +228,8 @@ The package includes powerful filtering and eager-loading capabilities. Pass fil
 ['deleted_at' => ['operator' => 'null']]      // IS NULL
 ['verified_at' => ['operator' => '!null']]    // IS NOT NULL
 ['verified_at' => ['operator' => 'not_null']]
+['published_at' => ['operator' => 'exists', 'value' => true]]   // IS NOT NULL
+['published_at' => ['operator' => 'exists', 'value' => false]]  // IS NULL
 ```
 
 ### Date Operations
@@ -292,11 +341,11 @@ The BaseCrudController provides:
 - `index()` – List records
 - `getPaginated($perPage)` - Paginate list of records
 - `show($id)` – Show single record
-- `store(Request $request)` – Create record
-- `update(Request $request, $id)` – Update record
+- `store(Request $request)` – Automatically resolves and validates the incoming Request using the associated Form Request, then creates record
+- `update(Request $request, $id)` – Automatically resolves and validates using the associated Update Form Request, then updates record
 - `destroy($id)` – Delete record
 
-All logic is handled inside **ApiCrudService**.
+Controller handles validation & response formatting. All business logic is handled inside **ApiCrudService**.
 
 ---
 
@@ -349,6 +398,7 @@ If the corresponding Resource class does not exist, the base controller will ret
 
 # 🧠 Best Practices
 
+✔ Use the Artisan Generator Command to create all layers automatically.<br>
 ✔ Keep business logic inside Model-specific services.<br>
 ✔ Keep controllers thin. <br>
 ✔ Extend ApiCrudService instead of modifying it.<br>
