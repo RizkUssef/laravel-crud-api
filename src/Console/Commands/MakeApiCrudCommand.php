@@ -43,7 +43,7 @@ class MakeApiCrudCommand extends Command
 
         // 3. Form Requests
         $this->call('make:request', ['name' => "{$name}Request"]);
-        $this->call('make:request', ['name' => "Update{$name}Request"]);
+        $this->call('make:request', ['name' => "{$name}UpdateRequest"]);
         
         // 4. Controller
         $this->generateController($name);
