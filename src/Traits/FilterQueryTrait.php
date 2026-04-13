@@ -26,7 +26,7 @@ trait FilterQueryTrait
             // If value is array with operator, use advanced filtering
             if (is_array($value) && isset($value['operator'])) {
                 $operator = $value['operator'];
-                $val = $value['value'] ?? null;
+                $val = $value['value'][$key] ?? null;
 
                 switch ($operator) {
                     case '=':
