@@ -248,13 +248,15 @@ The package includes powerful filtering and eager-loading capabilities. Pass fil
 import axios from 'axios';
 
 const fetchUsers = async () => {
-  const { data } = await axios.post('/api/users/Paginate', {
-    filters: {
-      status: 'active',
-      age: { operator: '>', value: 18 }
-    },
-    relationships: ['profile', 'comments'],
-    perPage: 15
+  const { data } = await axios.get('/api/users/Paginate', {
+    params: {
+      filters: {
+        status: 'active',
+        age: { operator: '>', value: 18 }
+      },
+      relationships: ['profile', 'comments'],
+      per_page: 15
+    }
   });
   
   console.log(data);
